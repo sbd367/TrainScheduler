@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Train Scheduler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css" />
+    <script src="https://www.gstatic.com/firebasejs/5.5.2/firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+    <script src="assets/Javascript/app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div id="headerT" class="col-md-12">
+                <img id="headerimg" src="https://vignette.wikia.nocookie.net/logopedia/images/a/a4/Back-to-the-future-part-III-movie-title.jpg/revision/latest?cb=20120219045951" alt="Back to the future part III">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="stuffs" class="card">
+
+                    <div class="card-header">
+                        Train Schedule
+                    </div>
+                    <div class="row">
+                        <div id="TN" class="col-md-2">
+                            <h3>Train Name</h3><hr>
+                        </div>
+                        <div id="TD" class="col-md-2">
+                            <h3>Destination</h3><hr>
+                            </div>
+                            <div id="TF" class="col-md-2.5">
+                                <h3>Frequency(min)</h3><hr>
+                                </div>
+                                <div id="NE" class="col-md-2">
+                                    <h3>Next Arrival</h3><hr>
+                                    </div>
+                                    <div id="MA" class="col-md-2">
+                                        <h3>Min Away</h3><hr>
+                                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="holds" class="row">
+            <div class="col-md-12">
+                <div id="UI" class="card">
+                    <div class="card-header">
+                        Add a train
+                    </div>
+                    <form>
+
+                    <h5 id="train-name">Train Name</h5>
+                    <input id="train-nameI" type="text" class="form-control" aria-describedby="inputGroup-sizing-default"><br>
+
+                    <h5 id="Destination">Destination</h5>
+                    <input id="train-destinationI" type="text" class="form-control" aria-describedby="inputGroup-sizing-default"><br>
+
+                    <h5 id="FTT">First Train Time</h5>
+                    <input id="train-timeI" type="text" class="form-control" aria-describedby="inputGroup-sizing-default" placeholder="HH:MM - Military time"><br>
+
+                    <h5 id="freak">Frequency</h5>
+                    <input id="train-frequencyI" type="text" class="form-control" aria-describedby="inputGroup-sizing-default" placeholder="Min">
+                    <button id="sendit" class="btn btn-primary"></button>
+            
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    var config = {
+    apiKey: "AIzaSyD6EP8ndAJczj4cQ7JsotaaRyEYjtroJU8",
+    authDomain: "train-schedule-2921b.firebaseapp.com",
+    databaseURL: "https://train-schedule-2921b.firebaseio.com",
+    projectId: "train-schedule-2921b",
+    storageBucket: "train-schedule-2921b.appspot.com",
+    messagingSenderId: "166955711536"
+  };
+  firebase.initializeApp(config);
+  var database = firebase.database();
+
+
+    var TrainN = "";
+    var TrainD = "";
+    var TrainT = "";
+    var TrainF = "";
+
+  console.log(database);
+  database.ref().on("child_added", function(snapshot){
+      console.log(snapshot.val());
+
+    var TrainN = $('#train-nameI').val().trim();
+    var TrainD = $('#train-destinationI').val().trim();
+    var TrainT = $('#train-timeI').val().trim();
+    var TrainF = $('#train-frequencyI').val().trim();
+
+    var firstTimeConvert = moment(snapshot.val().Train_Time, "HH:mm").subtract(1, "years");
+
+    var currentTime = moment();
+
+    var diffTime = currentTime.diff(moment(firstTimeConvert), "minutes");
+
+    var thaRemainder = diffTime % snapshot.val().Train_Frequency;
+
+    var timeTillNext = snapshot.val().Train_Frequency - thaRemainder;
+
+    var nextTrnTme = currentTime.add(timeTillNext, "minutes");
+
+    console.log(nextTrnTme);
+    
+    
+    $('#MA').append("<h6>"+timeTillNext+"</h6>");
+    $('#TD').append("<h6>"+snapshot.val().Train_Destination+"</h6>");
+    $('#TN').append("<h6>"+snapshot.val().Train_Name+"</h6>");
+    $('#TF').append("<h6>"+snapshot.val().Train_Frequency+"</h6>");
+    $('#NE').append("<h6>"+moment(nextTrnTme).format("hh:mm")+"</h6>");
+
+  })
+
+  
+  $('#sendit').on("click", function(event){
+    console.log("this");
+    event.preventDefault();
+
+    var TrainN = $('#train-nameI').val().trim();
+    var TrainD = $('#train-destinationI').val().trim();
+    var TrainT = $('#train-timeI').val().trim();
+    var TrainF = $('#train-frequencyI').val().trim();
+
+      database.ref().push({
+          Train_Name: TrainN,
+          Train_Destination: TrainD,
+          Train_Time: TrainT,
+          Train_Frequency: TrainF,
+      })
+
+  })
+    </script>
+</body>
+</html>
