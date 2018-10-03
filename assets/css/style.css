@@ -33,8 +33,22 @@ h3{
 #stuffs{
     background: url(https://i.ytimg.com/vi/xTNfCxoGoU0/maxresdefault.jpg);
     background-position: center;
+    opacity: .9;
 }
-
+#stuffnsuch{
+    color: black;
+    background: white;
+    border-radius: 3px;
+}
+#cardhead{
+    color: black;
+    background: white;
+    text-align: center;
+    width: 200px;
+    position: relative;
+    left: 40%;
+    border-radius: 3px;
+}
 #train-name{
     margin-top: 1vw;
 }
@@ -61,12 +75,13 @@ h6{
     border-radius: 30px;
     margin-top: 5px;
     margin-bottom: 15px;
+    opacity: .9;
 
 }
 #UI{
     background: url(http://kneelbeforeblog.co.uk/wp-content/uploads/2015/10/vlcsnap-00961.png);
     background-position: center;
-    opacity: .7;
+    opacity: .9;
 }
 
 #train-nameI{

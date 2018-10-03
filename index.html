@@ -26,7 +26,7 @@
                 <div id="stuffs" class="card">
 
                     <div class="card-header">
-                        Train Schedule
+                       <p id="cardhead">Train Schedule</p>
                     </div>
                     <div class="row">
                         <div id="TN" class="col-md-2">
@@ -119,11 +119,11 @@
     console.log(nextTrnTme);
     
     
-    $('#MA').append("<h6>"+timeTillNext+"</h6>");
-    $('#TD').append("<h6>"+snapshot.val().Train_Destination+"</h6>");
-    $('#TN').append("<h6>"+snapshot.val().Train_Name+"</h6>");
-    $('#TF').append("<h6>"+snapshot.val().Train_Frequency+"</h6>");
-    $('#NE').append("<h6>"+moment(nextTrnTme).format("hh:mm")+"</h6>");
+    $('#MA').append("<h6 id='stuffnsuch'>"+timeTillNext+"</h6>");
+    $('#TD').append("<h6 id='stuffnsuch'>"+snapshot.val().Train_Destination+"</h6>");
+    $('#TN').append("<h6 id='stuffnsuch'>"+snapshot.val().Train_Name+"</h6>");
+    $('#TF').append("<h6 id='stuffnsuch'>"+snapshot.val().Train_Frequency+"</h6>");
+    $('#NE').append("<h6 id='stuffnsuch'>"+moment(nextTrnTme).format("hh:mm")+"</h6>");
 
   })
 
